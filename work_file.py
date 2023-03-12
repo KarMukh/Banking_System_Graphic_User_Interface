@@ -1,3 +1,8 @@
+
+
+# This is a work file, trying to finish up first with transfer part and then with delete account, modify, etc.
+
+
 from tkinter import *
 import os
 from PIL import ImageTk, Image
