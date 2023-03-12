@@ -6,39 +6,12 @@ master = Tk()
 master.title('Banking System App')
 
 
-def finish_registration():
-    # print('done')
-    name = temp_name.get()
-    age = temp_age.get()
-    gender = temp_gender.get()
-    password = temp_password.get()
-    all_accounts = os.listdir()
-    # print(all_accounts)
-    if name == "" or age == "" or gender == "" or password == "":
-        notif.config(fg='red', text="All fields are required")
-        return
-    for name_check in all_accounts:
-        if name == name_check:
-            notif.config(fg='red', text="Account already exists")
-            return
-        else:
-            new_file = open(name, "w")
-            new_file.write(name+'\n')
-            new_file.write(password+'\n')
-            new_file.write(age+'\n')
-            new_file.write(gender+'\n')
-            new_file.write('0')
-            # new_file.write('0') this one is for balance, cause on the start the balance is 0
-            new_file.close()
-            notif.config(fg='green', text="Account has been created")
-
-
 def register():
     global temp_name
     global temp_age
     global temp_gender
     global temp_password
-    global notif
+    global notification
     temp_name = StringVar()
     temp_age = StringVar()
     temp_gender = StringVar()
@@ -52,8 +25,8 @@ def register():
     Label(register_screen, text="Age", font=('Calibri', 13)).grid(row=2, sticky=W)
     Label(register_screen, text="Gender", font=('Calibri', 13)).grid(row=3, sticky=W)
     Label(register_screen, text="Password", font=('Calibri', 13)).grid(row=4, sticky=W)
-    notif = Label(register_screen, font=('Calibri', 12))
-    notif.grid(row=6, sticky=N, pady=10)
+    notification = Label(register_screen, font=('Calibri', 12))
+    notification.grid(row=6, sticky=N, pady=10)
 
     Entry(register_screen, textvariable=temp_name).grid(row=1, column=0)
     Entry(register_screen, textvariable=temp_age).grid(row=2, column=0)
@@ -61,6 +34,33 @@ def register():
     Entry(register_screen, textvariable=temp_password, show='*').grid(row=4, column=0)
 
     Button(register_screen, text='Register', command=finish_registration, font=('Calibri', 12)).grid(row=5, sticky=N, pady=10)
+
+
+def finish_registration():
+    # print('done')
+    name = temp_name.get()
+    age = temp_age.get()
+    gender = temp_gender.get()
+    password = temp_password.get()
+    all_accounts = os.listdir()
+    # print(all_accounts)
+    if name == "" or age == "" or gender == "" or password == "":
+        notification.config(fg='red', text="All fields are required")
+        return
+    for name_check in all_accounts:
+        if name == name_check:
+            notification.config(fg='red', text="Account already exists")
+            return
+        else:
+            new_file = open(name, "w")
+            new_file.write(name+'\n')
+            new_file.write(password+'\n')
+            new_file.write(age+'\n')
+            new_file.write(gender+'\n')
+            new_file.write('0')
+            # new_file.write('0') this one is for balance, cause on the start the balance is 0
+            new_file.close()
+            notification.config(fg='green', text="Account has been created")
 
 
 def login_session():
@@ -90,6 +90,7 @@ def login_session():
                 Button(accounts_dashboard, text='Personal Details', font=('Calibri', 12), width=30, command=personal_details).grid(row=2, sticky=N, padx=10)
                 Button(accounts_dashboard, text='Deposit', font=('Calibri', 12), width=30, command=deposit).grid(row=3, sticky=N, padx=10)
                 Button(accounts_dashboard, text='Withdraw', font=('Calibri', 12), width=30, command=withdraw).grid(row=4, sticky=N, padx=10)
+                Button(accounts_dashboard, text='Transfer', font=('Calibri', 12), width=30, command=transfer).grid(row=5, sticky=N, padx=10)
                 Label(accounts_dashboard).grid(row=5, sticky=N, pady=10)
                 # The last one gonna leave a bit of space for us.
             # print(file_data)
@@ -209,6 +210,131 @@ def finish_withdraw():
 
     current_balance_tag.config(text="Current Balance : $"+str(updated_balance), fg='green')
     withdraw_notification.config(text="Balance Updated", fg='green')
+
+
+def transfer():
+    # print('Transfer')
+    global withdraw_user_name
+    global transfer_user_name
+    global transfer_amount
+    global transfer_notification
+    global current_balance1_tag
+    global current_balance2_tag
+
+    transfer_amount = StringVar()
+    file1 = open(login_name, 'r')
+    file2 = open(login_name, 'r')
+
+    file1_data = file1.read()
+    file2_data = file2.read()
+
+    user1_details = file1_data.split('\n')
+    user2_details = file2_data.split('\n')
+
+    details_balance1 = user1_details[4]
+    details_balance2 = user2_details[4]
+
+
+    transfer_screen = Toplevel(master)
+    transfer_screen.title('Transfer')
+
+    Label(transfer_screen, text='Transfer', font=('Calibri', 12)).grid(row=0, sticky=N, pady=10)
+    current_balance1_tag = Label(transfer_screen, text='Current Balance : $'+details_balance1, font=('Calibri', 12))
+    current_balance1_tag.grid(row=1, sticky=W)
+    current_balance2_tag = Label(transfer_screen, text='Current Balance : $'+details_balance2, font=('Calibri', 12))
+    current_balance2_tag.grid(row=2, sticky=W)
+    Label(transfer_screen, text='Transfer Amount', font=('Calibri', 12)).grid(row=3, sticky=W)
+    transfer_notification = Label(transfer_screen, font=('Calibri', 12))
+    transfer_notification.grid(row=5, sticky=N, pady=5)
+
+    Entry(transfer_screen, textvariable=withdraw_user_name).grid(row=2, column=1)
+    Entry(transfer_screen, textvariable=transfer_user_name).grid(row=3, column=1)
+    Entry(transfer_screen, textvariable=transfer_amount).grid(row=4, column=1)
+    # ow=2, column=1 cause I want the entry to be on the same level as Label for it
+
+    Button(transfer_screen, text='Finish', font=('Calibri', 12), command=finish_transfer).grid(row=3, sticky=W, pady=5)
+
+
+def finish_transfer():
+    all_accounts = os.listdir()
+    # listdir returns a list containing the names of the files in the directory.
+    for name in all_accounts:
+        user_name1 = input("Enter user name to withdraw from ")
+        if name != user_name1:
+            notification.config(fg='red', text="Wrong name is inputted")
+        # for name in all_accounts:
+        user_name2 = input("Enter user name to transfer to ")
+        if name != user_name2:
+            notification.config(fg='red', text="Wrong name is inputted")
+        else:
+            return
+
+    # if withdraw_user_name.get() == "":
+    #     transfer_notification.config(text="User name is required to withdraw from!", fg='red')
+    # if transfer_user_name.get() == "":
+    #     transfer_notification.config(text="User name is required to transfer to!", fg='red')
+    if transfer_amount.get() == "":
+        transfer_notification.config(text="Transfer amount is required!", fg='red')
+
+    if float(transfer_amount.get()) <= 0:
+        transfer_notification.config(text="0 or negative currency is not accepted", fg='red')
+        return
+
+    # def check(entry):
+    #     search = open('all_accounts', 'r')
+    #     if str(entry) in str(search):
+    #         return (entry, "Word found")
+    #     else:
+    #         return entry, ("Word not found")
+
+    file1 = open(login_name, 'r+')
+    file2 = open(login_name, 'r+')
+
+    ################### files are matched cause balances are the same
+
+    #### and no entries for name1, name1 and transfer_amount
+
+    file1 != file2
+    # or
+    name1 != name2
+
+    file1_data = file1.read()
+    file2_data = file2.read()
+
+    details1 = file1_data.split('\n')
+    details2 = file2_data.split('\n')
+
+    name1 = details1[0]
+    name2 = details2[0]
+
+    current_balance1 = details1[4]
+    current_balance2 = details2[4]
+
+    if float(transfer_amount.get()) > float(current_balance1):
+        transfer_notification.config(text='Insufficient Funds!', fg='red')
+        return
+    updated_balance1 = current_balance1
+    updated_balance1 = float(updated_balance1) - float(transfer_amount.get())
+    updated_balance2 = current_balance2
+    updated_balance2 = float(updated_balance2) + float(transfer_amount.get())
+
+    file1_data = file1_data.replace(current_balance1, str(updated_balance1))
+    file2_data = file2_data.replace(current_balance2, str(updated_balance2))
+
+    file1.seek(0)
+    file1.truncate(0)
+    file1.write(file1_data)
+    file1.close()
+
+    file2.seek(0)
+    file2.truncate(0)
+    file2.write(file2_data)
+    file2.close()
+
+    current_balance1_tag.config(text="Current Balance : $"+str(updated_balance1), fg='green')
+    current_balance2_tag.config(text="Current Balance : $" + str(updated_balance2), fg='green')
+
+    transfer_notification.config(text="Both balances are updated", fg='green')
 
 
 def personal_details():

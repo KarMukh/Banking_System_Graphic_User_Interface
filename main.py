@@ -6,39 +6,12 @@ master = Tk()
 master.title('Banking System App')
 
 
-def finish_registration():
-    # print('done')
-    name = temp_name.get()
-    age = temp_age.get()
-    gender = temp_gender.get()
-    password = temp_password.get()
-    all_accounts = os.listdir()
-    # print(all_accounts)
-    if name == "" or age == "" or gender == "" or password == "":
-        notif.config(fg='red', text="All fields are required")
-        return
-    for name_check in all_accounts:
-        if name == name_check:
-            notif.config(fg='red', text="Account already exists")
-            return
-        else:
-            new_file = open(name, "w")
-            new_file.write(name+'\n')
-            new_file.write(password+'\n')
-            new_file.write(age+'\n')
-            new_file.write(gender+'\n')
-            new_file.write('0')
-            # new_file.write('0') this one is for balance, cause on the start the balance is 0
-            new_file.close()
-            notif.config(fg='green', text="Account has been created")
-
-
 def register():
     global temp_name
     global temp_age
     global temp_gender
     global temp_password
-    global notif
+    global notification
     temp_name = StringVar()
     temp_age = StringVar()
     temp_gender = StringVar()
@@ -52,8 +25,8 @@ def register():
     Label(register_screen, text="Age", font=('Calibri', 13)).grid(row=2, sticky=W)
     Label(register_screen, text="Gender", font=('Calibri', 13)).grid(row=3, sticky=W)
     Label(register_screen, text="Password", font=('Calibri', 13)).grid(row=4, sticky=W)
-    notif = Label(register_screen, font=('Calibri', 12))
-    notif.grid(row=6, sticky=N, pady=10)
+    notification = Label(register_screen, font=('Calibri', 12))
+    notification.grid(row=6, sticky=N, pady=10)
 
     Entry(register_screen, textvariable=temp_name).grid(row=1, column=0)
     Entry(register_screen, textvariable=temp_age).grid(row=2, column=0)
@@ -61,6 +34,33 @@ def register():
     Entry(register_screen, textvariable=temp_password, show='*').grid(row=4, column=0)
 
     Button(register_screen, text='Register', command=finish_registration, font=('Calibri', 12)).grid(row=5, sticky=N, pady=10)
+
+
+def finish_registration():
+    # print('done')
+    name = temp_name.get()
+    age = temp_age.get()
+    gender = temp_gender.get()
+    password = temp_password.get()
+    all_accounts = os.listdir()
+    # print(all_accounts)
+    if name == "" or age == "" or gender == "" or password == "":
+        notification.config(fg='red', text="All fields are required")
+        return
+    for name_check in all_accounts:
+        if name == name_check:
+            notification.config(fg='red', text="Account already exists")
+            return
+        else:
+            new_file = open(name, "w")
+            new_file.write(name+'\n')
+            new_file.write(password+'\n')
+            new_file.write(age+'\n')
+            new_file.write(gender+'\n')
+            new_file.write('0')
+            # new_file.write('0') this one is for balance, cause on the start the balance is 0
+            new_file.close()
+            notification.config(fg='green', text="Account has been created")
 
 
 def login_session():
