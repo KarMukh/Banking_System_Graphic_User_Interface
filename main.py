@@ -268,6 +268,7 @@ Button(master, text='Login', font=('Calibri', 12), width=20, command=login).grid
 master.mainloop()
 
 
+
         # C:\Users\KarenM\Documents\Python\Flask\Banking_System_GUI\Scripts\python.exe C:\Users\KarenM\PycharmProjects\Banking_System_GUI\main.py
         # Exception in Tkinter callback
         # Traceback (most recent call last):
