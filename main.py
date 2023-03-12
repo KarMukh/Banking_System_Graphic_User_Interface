@@ -135,7 +135,7 @@ def finish_deposit():
         deposit_notification.config(text="0 or negative currency is not accepted", fg='red')
         return
 
-    file = open(login_name, 'r')
+    file = open(login_name, 'r+')
     # r+ means we can both read and write
     file_data = file.read()
     details = file_data.split('\n')
@@ -192,7 +192,7 @@ def finish_withdraw():
         withdraw_notification.config(text="0 or negative currency is not accepted", fg='red')
         return
 
-    file = open(login_name, 'r')
+    file = open(login_name, 'r+')
     file_data = file.read()
     details = file_data.split('\n')
     current_balance = details[4]
@@ -289,3 +289,5 @@ master.mainloop()
         # io.UnsupportedOperation: truncate
 
 
+""" Այս էռոռները տալիս էր, քանի որ finish_deposit և finish_withdraw ֆուկնցիաներում file = open(login_name, 'r+') տողում
+'r+'-ի փոխարեն 'r' էի դնում ու read and write -ի փոխարեն մենակ read էր անում """
