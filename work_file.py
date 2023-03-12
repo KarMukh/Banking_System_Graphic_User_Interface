@@ -266,3 +266,28 @@ Button(master, text='Register', font=('Calibri', 12), width=20, command=register
 Button(master, text='Login', font=('Calibri', 12), width=20, command=login).grid(row=4, sticky=N, pady=10)
 
 master.mainloop()
+
+
+
+        # C:\Users\KarenM\Documents\Python\Flask\Banking_System_GUI\Scripts\python.exe C:\Users\KarenM\PycharmProjects\Banking_System_GUI\main.py
+        # Exception in Tkinter callback
+        # Traceback (most recent call last):
+        #   File "C:\Users\KarenM\AppData\Local\Programs\Python\Python311\Lib\tkinter\__init__.py", line 1948, in __call__
+        #     return self.func(*args)
+        #            ^^^^^^^^^^^^^^^^
+        #   File "C:\Users\KarenM\PycharmProjects\Banking_System_GUI\main.py", line 205, in finish_withdraw
+        #     file.truncate(0)
+        # io.UnsupportedOperation: truncate
+
+        # Exception in Tkinter callback
+        # Traceback (most recent call last):
+        #   File "C:\Users\KarenM\AppData\Local\Programs\Python\Python311\Lib\tkinter\__init__.py", line 1948, in __call__
+        #     return self.func(*args)
+        #            ^^^^^^^^^^^^^^^^
+        #   File "C:\Users\KarenM\PycharmProjects\Banking_System_GUI\main.py", line 149, in finish_deposit
+        #     file.truncate(0)
+        # io.UnsupportedOperation: truncate
+
+
+""" Այս էռոռները տալիս էր, քանի որ finish_deposit և finish_withdraw ֆուկնցիաներում file = open(login_name, 'r+') տողում
+'r+'-ի փոխարեն 'r' էի դնում ու read and write -ի փոխարեն մենակ read էր անում """
