@@ -219,128 +219,181 @@ def finish_withdraw():
 
 def transfer():
     # print('Transfer')
-    global withdraw_user_name
-    global transfer_user_name
+    # global withdraw_user_name
+    global temp_transfer_user_name
     global transfer_amount
     global transfer_notification
     global current_balance1_tag
     global current_balance2_tag
+    # global file1
+    # global file2
+    # global username1
+    # global username2
 
+    # withdraw_user_name = StringVar()
+    temp_transfer_user_name = StringVar()
     transfer_amount = StringVar()
     file1 = open(login_name, 'r')
-    file2 = open(login_name, 'r')
-
     file1_data = file1.read()
-    file2_data = file2.read()
-
     user1_details = file1_data.split('\n')
-    user2_details = file2_data.split('\n')
-
+    details_name1 = user1_details[0]
     details_balance1 = user1_details[4]
-    details_balance2 = user2_details[4]
-
 
     transfer_screen = Toplevel(master)
     transfer_screen.title('Transfer')
 
     Label(transfer_screen, text='Transfer', font=('Calibri', 12)).grid(row=0, sticky=N, pady=10)
-    current_balance1_tag = Label(transfer_screen, text='Current Balance : $'+details_balance1, font=('Calibri', 12))
+    current_balance1_tag = Label(transfer_screen, text=details_name1+"'s "+'Current Balance is : $'+ details_balance1, font=('Calibri', 12))
     current_balance1_tag.grid(row=1, sticky=W)
-    current_balance2_tag = Label(transfer_screen, text='Current Balance : $'+details_balance2, font=('Calibri', 12))
-    current_balance2_tag.grid(row=2, sticky=W)
-    Label(transfer_screen, text='Transfer Amount', font=('Calibri', 12)).grid(row=3, sticky=W)
+    Label(transfer_screen, text='Transfer User Name', font=('Calibri', 12)).grid(row=3, sticky=W)
+    Label(transfer_screen, text='Transfer Amount', font=('Calibri', 12)).grid(row=4, sticky=W)
     transfer_notification = Label(transfer_screen, font=('Calibri', 12))
     transfer_notification.grid(row=5, sticky=N, pady=5)
 
-    Entry(transfer_screen, textvariable=withdraw_user_name).grid(row=2, column=1)
-    Entry(transfer_screen, textvariable=transfer_user_name).grid(row=3, column=1)
+    # Entry(transfer_screen, textvariable=withdraw_user_name).grid(row=2, column=1)
+    Entry(transfer_screen, textvariable=temp_transfer_user_name).grid(row=3, column=1)
     Entry(transfer_screen, textvariable=transfer_amount).grid(row=4, column=1)
     # ow=2, column=1 cause I want the entry to be on the same level as Label for it
+    # if file1 != file2:
+    # file2 = open(transfer_user_name, 'r')
+    # file2_data = file2.read()
+    # user2_details = file2_data.split('\n')
+    # details_name2 = user2_details[0]
+    # details_balance2 = user2_details[4]
 
-    Button(transfer_screen, text='Finish', font=('Calibri', 12), command=finish_transfer).grid(row=3, sticky=W, pady=5)
+    # transfer_screen = Toplevel(master)
+    # transfer_screen.title('Transfer2')
+
+    # Label(transfer_screen, text='Transfer2', font=('Calibri', 12)).grid(row=0, sticky=N, pady=10)
+    # current_balance2_tag = Label(transfer_screen, text='Current Balance : $'+details_balance2, font=('Calibri', 12))
+    # current_balance2_tag.grid(row=2, sticky=W)
+
+    Button(transfer_screen, text='Finish', font=('Calibri', 12), command=finish_transfer).grid(row=6, sticky=W, pady=5)
 
 
 def finish_transfer():
-    all_accounts = os.listdir()
-    # listdir returns a list containing the names of the files in the directory.
-    for name in all_accounts:
-        user_name1 = input("Enter user name to withdraw from ")
-        if name != user_name1:
-            notification.config(fg='red', text="Wrong name is inputted")
-        # for name in all_accounts:
-        user_name2 = input("Enter user name to transfer to ")
-        if name != user_name2:
-            notification.config(fg='red', text="Wrong name is inputted")
-        else:
-            return
 
-    # if withdraw_user_name.get() == "":
-    #     transfer_notification.config(text="User name is required to withdraw from!", fg='red')
-    # if transfer_user_name.get() == "":
-    #     transfer_notification.config(text="User name is required to transfer to!", fg='red')
+    # listdir returns a list containing the names of the files in the directory.
+    # for name in all_accounts:
+    #     username1 = input("Enter user name to withdraw from ")
+    #     if name != username1:
+    #         notification.config(fg='red', text="Wrong username1 is inputted")
+
     if transfer_amount.get() == "":
         transfer_notification.config(text="Transfer amount is required!", fg='red')
 
     if float(transfer_amount.get()) <= 0:
         transfer_notification.config(text="0 or negative currency is not accepted", fg='red')
         return
-
-    # def check(entry):
-    #     search = open('all_accounts', 'r')
-    #     if str(entry) in str(search):
-    #         return (entry, "Word found")
-    #     else:
-    #         return entry, ("Word not found")
-
     file1 = open(login_name, 'r+')
-    file2 = open(login_name, 'r+')
-
-    ################### files are matched cause balances are the same
-
-    #### and no entries for name1, name1 and transfer_amount
-
-    file1 != file2
-    # or
-    name1 != name2
-
     file1_data = file1.read()
-    file2_data = file2.read()
-
     details1 = file1_data.split('\n')
-    details2 = file2_data.split('\n')
-
-    name1 = details1[0]
-    name2 = details2[0]
-
+    details_name1 = details1[0]
     current_balance1 = details1[4]
-    current_balance2 = details2[4]
-
     if float(transfer_amount.get()) > float(current_balance1):
         transfer_notification.config(text='Insufficient Funds!', fg='red')
         return
     updated_balance1 = current_balance1
     updated_balance1 = float(updated_balance1) - float(transfer_amount.get())
-    updated_balance2 = current_balance2
-    updated_balance2 = float(updated_balance2) + float(transfer_amount.get())
-
     file1_data = file1_data.replace(current_balance1, str(updated_balance1))
-    file2_data = file2_data.replace(current_balance2, str(updated_balance2))
-
     file1.seek(0)
     file1.truncate(0)
     file1.write(file1_data)
     file1.close()
 
-    file2.seek(0)
-    file2.truncate(0)
-    file2.write(file2_data)
-    file2.close()
-
     current_balance1_tag.config(text="Current Balance : $"+str(updated_balance1), fg='green')
-    current_balance2_tag.config(text="Current Balance : $" + str(updated_balance2), fg='green')
+    # return
+    # global transfer_user_name
+    all_accounts = os.listdir()
+    transfer_user_name = temp_transfer_user_name.get()
+    for name in all_accounts:
+        # transfer_user_name = input("Enter user name to transfer to ")
+        if name == transfer_user_name: # and transfer_user_name != details_name1
+            # if file1 != file2:
+            file2 = open(transfer_user_name, 'r+')
+            file2_data = file2.read()
+            details2 = file2_data.split('\n')
+            transfer_user_name = details2[0]
+            current_balance2 = details2[4]
 
-    transfer_notification.config(text="Both balances are updated", fg='green')
+            # if transfer_user_name != details_name1 and transfer_user_name == details2[0]:
+                # if float(withdraw_amount.get()) > float(current_balance1):
+                #     withdraw_notification.config(text='Insufficient Funds!', fg='red')
+                #     return
+            updated_balance2 = current_balance2
+            updated_balance2 = float(updated_balance2) + float(transfer_amount.get())
+            file2_data = file2_data.replace(current_balance2, str(updated_balance2))
+            file2.seek(0)
+            file2.truncate(0)
+            file2.write(file2_data)
+            file2.close()
 
+    # current_balance2_tag.config(text="Current Balance : $" + str(updated_balance2), fg='green')
+
+            transfer_notification.config(text="Both balances are updated", fg='green')
+        else:
+            transfer_notification.config(fg='red', text="Wrong user_name2 is inputted")
+
+######### փորձեմ վիդրո ֆուլլ ֆունկցիա ու դեպոզիտ
+
+######### առաջին պատուհանում վիդրով անոըն ու տրանսֆեր գումար հետո երկրորդ պատուհան տրասֆեր անուն ու եթե ճիշտ է առաջինից մինուս երկրորդին պլյուս
+
+    # file1 = open(login_name, 'r+')
+    # file2 = open(login_name, 'r+')
+    #
+    # ################### files are matched cause balances are the same
+    #
+    # #### and no entries for name1, name1 and transfer_amount
+    #
+    # file1 != file2
+    # # or
+    # name1 != name2
+    #
+    # file1_data = file1.read()
+    # file2_data = file2.read()
+    #
+    # details1 = file1_data.split('\n')
+    # details2 = file2_data.split('\n')
+    #
+    # name1 = details1[0]
+    # name2 = details2[0]
+    #
+    # current_balance1 = details1[4]
+    # current_balance2 = details2[4]
+    #
+    # if float(transfer_amount.get()) > float(current_balance1):
+    #     transfer_notification.config(text='Insufficient Funds!', fg='red')
+    #     return
+    # updated_balance1 = current_balance1
+    # updated_balance1 = float(updated_balance1) - float(transfer_amount.get())
+    # updated_balance2 = current_balance2
+    # updated_balance2 = float(updated_balance2) + float(transfer_amount.get())
+    #
+    # file1_data = file1_data.replace(current_balance1, str(updated_balance1))
+    # file2_data = file2_data.replace(current_balance2, str(updated_balance2))
+    #
+    # file1.seek(0)
+    # file1.truncate(0)
+    # file1.write(file1_data)
+    # file1.close()
+    #
+    # file2.seek(0)
+    # file2.truncate(0)
+    # file2.write(file2_data)
+    # file2.close()
+    #
+    # current_balance1_tag.config(text="Current Balance : $"+str(updated_balance1), fg='green')
+    # current_balance2_tag.config(text="Current Balance : $" + str(updated_balance2), fg='green')
+    #
+    # transfer_notification.config(text="Both balances are updated", fg='green')
+
+
+# def check(entry):
+    #     search = open('all_accounts', 'r')
+    #     if str(entry) in str(search):
+    #         return (entry, "Word found")
+    #     else:
+    #         return entry, ("Word not found")
 
 def personal_details():
     file = open(login_name, 'r')
